@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>ХмельДрон</title>
+    <style>
+      h1 {
+        animation: wiggle 0.3s infinite alternate;
+        display: inline-block;
+      }
+
+      @keyframes wiggle {
+        0% {
+          transform: rotate(-2deg) scale(1);
+        }
+        100% {
+          transform: rotate(2deg) scale(1.05);
+        }
+      }
+
+      /* Мышь ускользает */
+      button:hover {
+        animation: runAway 0.3s ease forwards;
+        position: relative;
+      }
+
+      @keyframes runAway {
+        to {
+          transform: translateX(100px) rotate(20deg);
+        }
+      }
+
+      /* Танцующий дрон */
+      #flyingDrone {
+        position: fixed;
+        font-size: 40px;
+        z-index: 9999;
+        animation: flyDrone 10s linear infinite;
+        pointer-events: none;
+      }
+
+      @keyframes flyDrone {
+        0% {
+          top: 10%;
+          left: -10%;
+        }
+        25% {
+          top: 30%;
+          left: 30%;
+        }
+        50% {
+          top: 50%;
+          left: 70%;
+        }
+        75% {
+          top: 70%;
+          left: 30%;
+        }
+        100% {
+          top: 10%;
+          left: -10%;
+        }
+      }
+
+      body {
+        background-color: magenta;
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        animation: shake 0.1s infinite alternate;
+      }
+      @keyframes shake {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(0.3deg);
+        }
+      }
+      nav {
+        background-color: lime;
+        padding: 20px;
+        display: flex;
+        justify-content: space-around;
+        border-bottom: 5px dotted red;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      nav a {
+        color: navy;
+        text-decoration: underline wavy yellow;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      .page {
+        display: none;
+        padding: 30px;
+      }
+      .active {
+        display: block;
+      }
+      input[type="file"] {
+        background: yellow;
+        border: 5px dashed cyan;
+        font-size: 20px;
+        padding: 10px;
+        animation: flicker 0.5s infinite;
+      }
+      @keyframes flicker {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.1;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        background: pink;
+        transform: rotate(2deg);
+      }
+      table,
+      th,
+      td {
+        border: 3px groove green;
+      }
+      iframe {
+        width: 100%;
+        height: 400px;
+        border: 10px ridge purple;
+        filter: grayscale(100%) blur(1px);
+      }
+      .draggable {
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        background: orange;
+        padding: 15px;
+        border: 3px solid black;
+        cursor: grab;
+        z-index: 9999;
+      }
+      .hidden-message {
+        color: red;
+        font-size: 30px;
+        animation: blink 1s infinite;
+      }
+      @keyframes blink {
+        0% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+      .random-alert {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        background: cyan;
+        padding: 10px;
+        font-size: 20px;
+        border: 3px double red;
+        animation: movealert 5s linear infinite;
+      }
+      @keyframes movealert {
+        0% {
+          left: 0;
+        }
+        50% {
+          left: 50%;
+        }
+        100% {
+          left: 0;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header
+      style="
+        background: gold;
+        text-align: center;
+        padding: 20px;
+        border-bottom: 5px dashed purple;
+      "
+    >
+      <h1 style="font-size: 50px; color: darkgreen; text-shadow: 2px 2px red">
+        🛸 Хмельной Дрон ™
+      </h1>
+      <p style="font-style: italic; font-size: 18px">
+        Доставим в точку. Или в точку падения.
+      </p>
+    </header>
+
+    <nav>
+      <h1></h1>
+      <a onclick="showPage('upload')">Загрузить</a>
+      <a onclick="showPage('data')">Данные</a>
+      <a onclick="showPage('map')">Карта</a>
+      <a onclick="showPage('stats')">Статистика</a>
+    </nav>
+
+    <div id="upload" class="page active">
+      <h1>Загрузите ваши тайные данные</h1>
+      <input type="file" multiple />
+      <p class="hidden-message">ХМЕЛЬДРОН - ЛУЧШИЙ АВТОСЕРВИС ДРОНОВ В МИРЕ</p>
+    </div>
+
+    <div id="data" class="page">
+      <h1>Данные</h1>
+      <table>
+        <tr>
+          <th>ID</th>
+          <th>Температура</th>
+          <th>Влажность</th>
+        </tr>
+        <tr>
+          <td>1</td>
+          <td>123</td>
+          <td>...</td>
+        </tr>
+        <tr>
+          <td>2</td>
+          <td>???</td>
+          <td>42%</td>
+        </tr>
+        <tr>
+          <td>3</td>
+          <td colspan="2">ошибка получения данных</td>
+        </tr>
+      </table>
+      <p style="color: darkred; font-style: italic">
+        Нажмите F5 для обновления... или не нажимайте, оно всё равно не поможет
+      </p>
+    </div>
+
+    <div id="map" class="page">
+      <h1>Карта Хмель-Дронов</h1>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d40772.00883119187!2d30.0634998!3d51.276546!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x472a778e4f996a2f%3A0x2c7f1fd997ec9dc!2z0KfQtdGA0LjQu9Cw0L3QsNGPINGD0LsuINCe0LrRgNCw0YbQtdC90LAg0KPQvdC40LLQtdGA0YHQutC40Lkg0YHQsNC80LXRgtGB0YLRjA!5e0!3m2!1sru!2sua!4v1629721022604!5m2!1sru!2sua"
+        title="Ужасная карта"
+      ></iframe>
+      <p style="color: darkblue">наши БПЛА не теряются! Za наших!!</p>
+    </div>
+
+    <div id="stats" class="page">
+      <h1>Статистика</h1>
+      <p>вот хмель-график:</p>
+      <div
+        style="
+          background: red;
+          width: 50%;
+          height: 50px;
+          animation: blink 1s infinite;
+        "
+      ></div>
+      <p>
+        <em>"Статистика — ложь, облачённая в числа" (с) Джейсон Стетхем</em>
+      </p>
+      <button onclick="analyzeThoughts()">Показать больше статистики</button>
+    </div>
+
+    <div class="draggable" id="trollbox">Че зыришь я шальной дрон</div>
+
+    <div class="random-alert">⚠️ ВНИМАНИЕ: Спасибо за внимание!</div>
+
+    <footer
+      style="
+        background: black;
+        color: lime;
+        padding: 30px;
+        text-align: center;
+        font-size: 18px;
+        border-top: 5px dotted red;
+      "
+    >
+      <p>© 2025 ХмельДрон Индастриз. Все права ~потеряны~ защищены дронами.</p>
+      <p>💡 Закажите дрона</p>
+      <button
+        onclick="footerFun()"
+        style="
+          background: magenta;
+          color: yellow;
+          font-size: 20px;
+          padding: 10px;
+          border: 3px groove cyan;
+          cursor: pointer;
+        "
+      >
+        Заказать дрона
+      </button>
+    </footer>
+    <img
+      id="randomImage"
+      style="display: none; position: fixed; width: 100px; z-index: 9999"
+    />
+
+    <script>
+      function showPage(id) {
+        const pages = document.querySelectorAll(".page");
+        pages.forEach((p) => p.classList.remove("active"));
+
+        // Тролль-фича: сначала мешаем, потом нормально
+        if (!showPage.attempts) showPage.attempts = 0;
+        showPage.attempts++;
+
+        if (showPage.attempts < 3) {
+          const randomPage = pages[Math.floor(Math.random() * pages.length)];
+          randomPage.classList.add("active");
+          alert("Куда мы лезем боже");
+        } else {
+          document.getElementById(id).classList.add("active");
+          showPage.attempts = 0;
+        }
+      }
+
+      const box = document.getElementById("trollbox");
+      box.addEventListener("mouseenter", () => {
+        box.style.top = Math.random() * (window.innerHeight - 100) + "px";
+        box.style.left = Math.random() * (window.innerWidth - 100) + "px";
+      });
+
+      setInterval(() => {
+        alert("Неизвестная критическа ОШИБКА");
+      }, 60000);
+
+      function analyzeThoughts() {
+        alert("Наебал)");
+      }
+
+      let logoClicks = 0;
+      document.querySelector("header h1").addEventListener("click", () => {
+        logoClicks++;
+        if (logoClicks >= 5) {
+          alert("ОШИБКА БЛЯ");
+          document.body.style.backgroundColor = "gold";
+        }
+      });
+
+      function footerFun() {
+        alert("Наебал)");
+        const quote = document.createElement("p");
+        quote.textContent = "ОШИБКА";
+        quote.style.color = "white";
+        document.querySelector("footer").appendChild(quote);
+      }
+
+      // Попытка автозапуска музыки (некоторые браузеры блокируют, пока нет взаимодействия)
+      window.addEventListener(
+        "click",
+        () => {
+          const audio = document.getElementById("trollMusic");
+          if (audio.paused) {
+            audio.play().catch(() => {});
+          }
+        },
+        { once: true }
+      );
+
+      // Пляшущий заголовок уже анимируется через CSS
+      // Ускользающие кнопки — логика добавлена через hover CSS
+
+      // Можно добавить анимацию "ухода" курсора от кнопок при наведении:
+      document.querySelectorAll("button").forEach((btn) => {
+        btn.addEventListener("mouseenter", () => {
+          btn.style.transform = `translate(${Math.random() * 200 - 100}px, ${
+            Math.random() * 100 - 50
+          }px) rotate(${Math.random() * 20 - 10}deg)`;
+        });
+        btn.addEventListener("mouseleave", () => {
+          btn.style.transform = "none";
+        });
+      });
+      const images = [
+        "https://avatars.mds.yandex.net/get-mpic/5287705/2a0000018e7b19352ab0d48e89b4eb7dc1ef/orig",
+      ];
+
+      const imgElement = document.getElementById("randomImage");
+
+      window.addEventListener("scroll", () => {
+        // Регулируйте вероятность (0.98 = 2% шанс)
+        imgElement.src = images[Math.floor(Math.random() * images.length)];
+        imgElement.style.display = "block";
+        imgElement.style.top =
+          Math.random() * (window.innerHeight - 100) + "px";
+        imgElement.style.left =
+          Math.random() * (window.innerWidth - 100) + "px";
+
+        setTimeout(() => {
+          imgElement.style.display = "none";
+        }, 2000); // Исчезнет через 2 секунды
+      });
+
+      document.addEventListener("mousemove", (e) => {
+        const x = (e.clientX / window.innerWidth) * 100;
+        const y = (e.clientY / window.innerHeight) * 100;
+        document.body.style.background = `radial-gradient(at ${x}% ${y}%, magenta, lime, cyan)`;
+      });
+
+      const sounds = [
+        "https://www.myinstants.com/media/sounds/vine-boom.mp3",
+        "https://www.myinstants.com/media/sounds/windows-xp-error.mp3",
+        "https://www.myinstants.com/media/sounds/minecraft-sound.mp3",
+      ];
+
+      setInterval(() => {
+        const audio = new Audio(
+          sounds[Math.floor(Math.random() * sounds.length)]
+        );
+        audio.volume = 1;
+        audio.play().catch(() => {});
+      }, 1000);
+    </script>
+
+    <audio id="trollMusic" autoplay loop>
+      <source
+        src="https://www.myinstants.com/media/sounds/trololo.mp3"
+        type="audio/mpeg"
+      />
+      Ваш браузер не поддерживает аудио.
+    </audio>
+    <div id="flyingDrone">🛸</div>
+  </body>
+</html>
